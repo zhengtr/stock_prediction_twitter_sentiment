@@ -1,0 +1,41 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
+factory-boy = "*"
+xlsxwriter = "*"
+moto = "*"
+
+[packages]
+pandas = "*"
+setuptools = "*"
+setuptools-scm = "*"
+csci-utils = {editable = true,git = "https://github.com/csci-e-29/2020sp-csci-utils-jiaxinFL"}
+django = "==2.2.7"
+django-environ = "==0.4.5"
+djangorestframework = "==3.10.3"
+django-model-utils = "==3.2.0"
+django-crispy-forms = "==1.8.0"
+django-allauth = "==0.40.0"
+django-extensions = "==2.2.5"
+argon2-cffi = "==19.2.0"
+coreapi = "==2.3.3"
+django-debug-toolbar = "*"
+luigi = "*"
+yfinance = "*"
+boto3 = "*"
+s3fs = "*"
+xlrd = "*"
+sqlalchemy = "*"
+vadersentiment = "*"
+sklearn = "*"
+praw = "*"
+
+
+[requires]
+python_version = "3.7"

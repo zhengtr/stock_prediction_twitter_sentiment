@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<!-- {% load staticfiles %} -->
+<head>
+	<title>Stock Prediction by Twitter Sentiment</title>
+	<meta charset="UTF-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable = no">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name = "viewport" content = "initial-scale = 1">
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css" rel="stylesheet">
+
+	<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
+	
+
+	<script type="text/javascript">
+		var myData = ""
+		var button23Warning = "Please Load the Data first:)"
+
+		$(function() {
+			loadDataFlag = false;
+			predictFlag = false;
+			$('#button1').on('click',function(){
+				myUrl = "http://127.0.0.1:8000/twitter_stock/loadingData/"
+				console.info(myUrl)
+				// alert(myUrl)
+				$.ajax({
+					url: myUrl,
+	                async: false,
+	                type: "POST",
+	                
+	                success: function (data) {
+	                    alert("Loading Successful!");
+	                }
+				})
+				loadDataFlag = true
+			})
+
+			$('#button2').on('click',function(){
+				if(loadDataFlag){
+					$('#myModal1').modal('show')
+				} else{
+					alert(button23Warning);
+				}
+			})
+
+		   $('#queryButton').on('click',function(){
+				myUrl = "http://127.0.0.1:8000/twitter_stock/predict/"
+				myData = $('#myForm').serialize()
+				$.ajax({
+					url: myUrl,
+	                async: false,
+	                type: "POST",
+	                data: myData,
+	                
+	                success: function (data) {
+	                    alert(data);
+	                }
+				})
+				$('#myModal1').modal('hide')
+			})
+
+			$('#button3').off().on('click',function(){
+				if(loadDataFlag){
+					myUrl = "http://127.0.0.1:8000/twitter_stock/mygraph/"
+					if(myData != null){
+						$.ajax({
+							cache: false,
+							url: myUrl,
+			                async: false,
+			                type: "POST",
+			                data: myData,
+			                
+			                success: function (returnData) {
+								returnData = JSON.parse(returnData)
+								var lineChartData = {
+									labels : returnData.date,
+									datasets : [
+										{
+											label:"nav",
+											borderColor:"rgba(31,122,240,1)",
+											fill : 'false',
+											data : returnData.nav
+										},
+										{
+											label:"nav_strategy",
+											borderColor:"rgba(31,240,48,1)",
+											fill : 'false',
+											data : returnData.nav_strategy
+										}
+									]
+								}
+								var ctx = document.getElementById("canvas2").getContext("2d")
+								var myLine = new Chart(ctx,{
+									type:'line',
+						    		data: lineChartData,
+									});
+								alert("Finish!Please scroll to the bottom of the screen!");
+					        }
+						})
+						
+					} else{
+						alert("Please click the predict button first:)");
+					}
+
+				} else{
+					alert(button23Warning);
+				}
+			})
+
+
+		   $('#button4').on('click',function(){
+				if(loadDataFlag){
+					myUrl = "http://127.0.0.1:8000/twitter_stock/share/"
+					$.ajax({
+						url: myUrl,
+		                async: false,
+		                type: "POST",
+		                data: myData,
+		                
+		                success: function (data) {
+		                    alert(data);
+		                }
+					})		
+				} else{
+					alert(button23Warning);
+				}
+			})
+		});
+	</script>
+
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Stock Prediction by Twitter Sentiment</h1>
+			<p>{{information}}</p>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-3">
+				<button type="button" class="btn btn-success btn-lg" id="button1">
+					{{button1Title}}
+				</button>
+			</div>
+			<div class="col-xs-3">
+				<!-- Button trigger modal -->
+				<button type="button" class="btn btn-primary btn-lg" id="button2">
+					{{button2Title}}
+				</button>
+
+				<!-- Modal -->
+				<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">Modal title1</h4>
+							</div>
+							<div class="modal-body">
+								<form id="myForm">
+									<div class="form-group">
+										<label for="myDate">DATE</label>
+										<input type="date" id="myDate" name="myDate" class="form-control" placeholder="yyyy-mm-dd">
+									</div>
+									
+									<div class="form-group">
+										<label for="ticker">ticker</label>
+										<input type="text" class="form-control" name="ticker" id="ticker" placeholder="ticker">
+									</div>
+
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary" id="queryButton">Submit</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-3">
+				<!-- Button trigger modal -->
+				<button type="button" class="btn btn-info btn-lg" id="button3">
+					{{button3Title}}
+				</button>
+			</div>
+			<div class="col-xs-3">
+				<button type="button" class="btn btn-warning btn-lg" id="button4">
+					ShareToReddit
+				</button>
+			</div>
+
+			<hr class="col-xs-12 alert alert-success"/>
+			<div class="col-xs-12">
+				<canvas id="canvas2" height="900" width="1550"></canvas>
+			</div>
+		</div>
+</div>	
+
+
+
+</body>
+</html>
