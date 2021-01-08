@@ -1,6 +1,11 @@
 # Stock Prediction by Twitter Sentiment
 
 
+## Description
+
+Studies and reports have shown that how people tweet is related to stock market values. Generally, Positive sentiment indicated positive change in stock values. In this project, I built a model that analyzes Twitter sentiment, and use it to predict buy/sell signals for stocks. The users can use Django web interface to check on each stock and get predictions for buy/sell.
+
+
 ## Usage
 
 ```
