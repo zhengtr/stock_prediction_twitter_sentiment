@@ -1,4 +1,4 @@
-# Stock Prediction by Twitter Sentiment
+# Stock Trading Signal Prediction by Twitter Sentiment
 
 
 ## Description
