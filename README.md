@@ -29,4 +29,4 @@ Note: Luigi has threading issues when building from Django. Use `--nothreading` 
 
 
 ## Snapshots of the Website
-![Alt text](screen_shot.jpg?raw=true "Screen Shot")
+![Alt text](web.jpg?raw=true "Screenshot of Webpage")
